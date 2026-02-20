@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+    <name>PayzCore - Stablecoin Monitoring for OpenCart</name>
+    <code>payzcore</code>
+    <version>1.0.0</version>
+    <author>PayzCore</author>
+    <link>https://payzcore.com</link>
+    <description>Accept stablecoin payments (USDT, USDC) on multiple networks (TRC20, BEP20, ERC20, Polygon, Arbitrum) via PayzCore blockchain transaction monitoring. Non-custodial - watches blockchain addresses and sends webhook notifications when transactions are detected.</description>
+
+    <!--
+        This extension does not require OCMOD XML modifications.
+        It uses the standard OpenCart MVC-L extension pattern.
+
+        Files installed:
+        - admin/controller/extension/payment/payzcore.php
+        - admin/model/extension/payment/payzcore.php
+        - admin/view/template/extension/payment/payzcore.twig
+        - admin/language/en-gb/extension/payment/payzcore.php
+        - catalog/controller/extension/payment/payzcore.php
+        - catalog/model/extension/payment/payzcore.php
+        - catalog/view/template/extension/payment/payzcore.twig
+        - catalog/view/template/extension/payment/payzcore_confirm.twig
+        - catalog/language/en-gb/extension/payment/payzcore.php
+        - system/library/payzcore.php
+    -->
+</modification>
