@@ -1,0 +1,70 @@
+{# PayzCore - Checkout Payment Button #}
+{# Displayed in the OpenCart checkout when PayzCore is selected as the payment method. #}
+<div class="payzcore-checkout">
+  <p>{{ text_description }}</p>
+
+  <form id="payzcore-form" action="{{ action }}" method="post">
+  {% if networks|length > 1 %}
+  {# Multi-network: show network and token selectors #}
+  <div class="form-group">
+    <label for="payzcore-network"><strong>{{ text_select_network }}</strong></label>
+    <select name="payzcore_network" id="payzcore-network" class="form-control">
+      {% for network in networks %}
+      <option value="{{ network.code }}">{{ network.label }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="form-group" id="payzcore-token-row">
+    <label for="payzcore-token"><strong>{{ text_select_token }}</strong></label>
+    <select name="payzcore_token" id="payzcore-token" class="form-control">
+      <option value="USDT" {% if default_token == 'USDT' %}selected="selected"{% endif %}>USDT (Tether)</option>
+      <option value="USDC" {% if default_token == 'USDC' %}selected="selected"{% endif %}>USDC (USD Coin)</option>
+    </select>
+    <p class="help-block" id="payzcore-trc20-note" style="display:none;color:#f0ad4e;margin-top:4px;">{{ text_trc20_note }}</p>
+  </div>
+  {% else %}
+  {# Single network: show network/token info, hidden inputs #}
+  <p><strong>{{ token_label }} &middot; {{ network_label }}</strong></p>
+  <input type="hidden" name="payzcore_network" id="payzcore-network" value="{{ networks[0].code }}" />
+  <input type="hidden" name="payzcore_token" id="payzcore-token" value="{{ default_token }}" />
+  {% endif %}
+
+  <div class="buttons">
+    <div class="pull-right">
+      <input type="submit" value="{{ text_confirm_button }}" id="button-payzcore" data-loading-text="{{ text_loading }}" class="btn btn-primary btn-lg" />
+    </div>
+  </div>
+  </form>
+</div>
+<script type="text/javascript"><!--
+{% if networks|length > 1 %}
+(function() {
+    var networkSelect = document.getElementById('payzcore-network');
+    var tokenSelect = document.getElementById('payzcore-token');
+    var trc20Note = document.getElementById('payzcore-trc20-note');
+
+    function updateTokenVisibility() {
+        if (networkSelect.value === 'TRC20') {
+            tokenSelect.value = 'USDT';
+            tokenSelect.disabled = true;
+            trc20Note.style.display = '';
+        } else {
+            tokenSelect.disabled = false;
+            trc20Note.style.display = 'none';
+        }
+    }
+
+    networkSelect.addEventListener('change', updateTokenVisibility);
+    updateTokenVisibility();
+})();
+{% endif %}
+
+$('#payzcore-form').on('submit', function(e) {
+    var btn = $('#button-payzcore');
+    btn.button('loading');
+    btn.prop('disabled', true);
+
+    // Re-enable disabled selects so their values are submitted
+    $('#payzcore-token').prop('disabled', false);
+});
+//--></script>

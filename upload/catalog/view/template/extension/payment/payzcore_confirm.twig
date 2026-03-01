@@ -1,0 +1,774 @@
+{{ header }}
+<div id="content" class="container">
+  {{ content_top }}
+  <style>
+    .pzc-wrap {
+      max-width: 520px;
+      margin: 30px auto;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    .pzc-card {
+      background: #09090b;
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 16px;
+      padding: 32px 28px;
+      color: #ffffff;
+    }
+    .pzc-card h2 {
+      color: #06b6d4;
+      font-size: 20px;
+      font-weight: 600;
+      margin: 0 0 8px 0;
+      text-align: center;
+    }
+    .pzc-card .pzc-subtitle {
+      color: #a1a1aa;
+      font-size: 13px;
+      text-align: center;
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+    .pzc-order-badge {
+      display: inline-block;
+      background: rgba(6,182,212,0.1);
+      color: #06b6d4;
+      font-size: 12px;
+      font-weight: 500;
+      padding: 4px 12px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+    .pzc-amount-box {
+      background: rgba(6,182,212,0.08);
+      border: 1px solid rgba(6,182,212,0.2);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .pzc-amount-label {
+      color: #a1a1aa;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+    }
+    .pzc-amount-value {
+      color: #06b6d4;
+      font-size: 32px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+    .pzc-amount-unit {
+      color: #a1a1aa;
+      font-size: 14px;
+      font-weight: 400;
+      margin-left: 4px;
+    }
+    .pzc-amount-copy-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .pzc-amount-copy-btn {
+      background: rgba(6,182,212,0.15);
+      border: 1px solid rgba(6,182,212,0.3);
+      color: #06b6d4;
+      font-size: 11px;
+      font-weight: 500;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s;
+    }
+    .pzc-amount-copy-btn:hover {
+      background: rgba(6,182,212,0.25);
+    }
+    .pzc-amount-copy-btn.copied {
+      background: rgba(16,185,129,0.2);
+      border-color: rgba(16,185,129,0.4);
+      color: #10b981;
+    }
+    .pzc-network-badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #d4d4d8;
+      font-size: 12px;
+      padding: 3px 10px;
+      border-radius: 8px;
+      margin-top: 8px;
+    }
+    .pzc-address-box {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+    .pzc-address-label {
+      color: #a1a1aa;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 8px;
+    }
+    .pzc-address-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .pzc-address-text {
+      flex: 1;
+      font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+      font-size: 13px;
+      color: #ffffff;
+      word-break: break-all;
+      line-height: 1.5;
+      background: rgba(255,255,255,0.03);
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+    .pzc-copy-btn {
+      background: rgba(6,182,212,0.15);
+      border: 1px solid rgba(6,182,212,0.3);
+      color: #06b6d4;
+      font-size: 12px;
+      font-weight: 500;
+      padding: 10px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s;
+    }
+    .pzc-copy-btn:hover {
+      background: rgba(6,182,212,0.25);
+    }
+    .pzc-copy-btn.copied {
+      background: rgba(16,185,129,0.2);
+      border-color: rgba(16,185,129,0.4);
+      color: #10b981;
+    }
+    .pzc-qr-section {
+      text-align: center;
+      margin: 20px 0;
+    }
+    .pzc-qr-label {
+      color: #a1a1aa;
+      font-size: 12px;
+      margin-bottom: 12px;
+    }
+    .pzc-qr-img {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 12px;
+      display: inline-block;
+    }
+    .pzc-qr-img img {
+      width: 180px;
+      height: 180px;
+      display: block;
+    }
+    .pzc-timer-box {
+      background: rgba(245,158,11,0.08);
+      border: 1px solid rgba(245,158,11,0.2);
+      border-radius: 12px;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .pzc-timer-label {
+      color: #a1a1aa;
+      font-size: 13px;
+    }
+    .pzc-timer-value {
+      color: #f59e0b;
+      font-size: 18px;
+      font-weight: 700;
+      font-family: 'SF Mono', monospace;
+    }
+    .pzc-timer-box.expired {
+      background: rgba(239,68,68,0.08);
+      border-color: rgba(239,68,68,0.2);
+    }
+    .pzc-timer-box.expired .pzc-timer-value {
+      color: #ef4444;
+    }
+    .pzc-status-box {
+      text-align: center;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+    .pzc-status-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #f59e0b;
+      margin-right: 8px;
+      animation: pzc-pulse 2s ease-in-out infinite;
+    }
+    .pzc-status-dot.confirmed {
+      background: #06b6d4;
+      animation: none;
+    }
+    .pzc-status-dot.expired {
+      background: #ef4444;
+      animation: none;
+    }
+    .pzc-status-text {
+      color: #a1a1aa;
+      font-size: 13px;
+    }
+    @keyframes pzc-pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+    .pzc-warnings {
+      border-top: 1px solid rgba(255,255,255,0.05);
+      padding-top: 20px;
+      margin-top: 20px;
+    }
+    .pzc-warnings h4 {
+      color: #f59e0b;
+      font-size: 13px;
+      font-weight: 600;
+      margin: 0 0 12px 0;
+    }
+    .pzc-warnings ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .pzc-warnings li {
+      color: #a1a1aa;
+      font-size: 12px;
+      line-height: 1.6;
+      padding: 4px 0;
+      padding-left: 16px;
+      position: relative;
+    }
+    .pzc-warnings li::before {
+      content: "\2022";
+      color: #52525b;
+      position: absolute;
+      left: 0;
+    }
+    .pzc-explorer-link {
+      display: block;
+      text-align: center;
+      margin-top: 16px;
+    }
+    .pzc-explorer-link a {
+      color: #06b6d4;
+      font-size: 12px;
+      text-decoration: none;
+      opacity: 0.8;
+    }
+    .pzc-explorer-link a:hover {
+      opacity: 1;
+      text-decoration: underline;
+    }
+    .pzc-notice-box {
+      background: rgba(245,158,11,0.08);
+      border: 1px solid rgba(245,158,11,0.2);
+      border-radius: 12px;
+      padding: 14px 20px;
+      color: #f59e0b;
+      font-size: 13px;
+      font-weight: 500;
+      text-align: center;
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+    .pzc-txid-box {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+    .pzc-txid-label {
+      color: #a1a1aa;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 8px;
+    }
+    .pzc-txid-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .pzc-txid-input {
+      flex: 1;
+      font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+      font-size: 13px;
+      color: #ffffff;
+      background: rgba(255,255,255,0.03);
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.1);
+      outline: none;
+    }
+    .pzc-txid-input:focus {
+      border-color: rgba(6,182,212,0.4);
+    }
+    .pzc-txid-btn {
+      background: rgba(6,182,212,0.15);
+      border: 1px solid rgba(6,182,212,0.3);
+      color: #06b6d4;
+      font-size: 12px;
+      font-weight: 500;
+      padding: 10px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s;
+    }
+    .pzc-txid-btn:hover {
+      background: rgba(6,182,212,0.25);
+    }
+    .pzc-txid-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .pzc-txid-msg {
+      font-size: 12px;
+      margin-top: 8px;
+      display: none;
+    }
+    .pzc-txid-msg.success {
+      color: #10b981;
+      display: block;
+    }
+    .pzc-txid-msg.error {
+      color: #ef4444;
+      display: block;
+    }
+    .pzc-partial-guidance {
+      color: #f59e0b;
+      font-size: 12px;
+      margin-top: 6px;
+      display: none;
+    }
+    .pzc-connection-issue {
+      color: #f59e0b;
+      font-size: 12px;
+      margin-top: 4px;
+      display: none;
+    }
+    .pzc-txid-input:disabled,
+    .pzc-txid-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    /* Mobile responsive */
+    @media (max-width: 600px) {
+      .pzc-wrap {
+        margin: 16px auto;
+        padding: 0 8px;
+      }
+      .pzc-card {
+        padding: 20px 16px;
+        border-radius: 12px;
+      }
+      .pzc-card h2 {
+        font-size: 18px;
+      }
+      .pzc-amount-value {
+        font-size: 24px;
+      }
+      .pzc-address-row {
+        flex-direction: column;
+        gap: 10px;
+      }
+      .pzc-address-text {
+        font-size: 11px;
+        padding: 8px 10px;
+      }
+      .pzc-copy-btn {
+        width: 100%;
+        text-align: center;
+        padding: 10px;
+      }
+      .pzc-qr-img img {
+        width: 150px;
+        height: 150px;
+      }
+      .pzc-timer-box {
+        flex-direction: column;
+        gap: 6px;
+        text-align: center;
+        padding: 12px 16px;
+      }
+      .pzc-txid-row {
+        flex-direction: column;
+        gap: 10px;
+      }
+      .pzc-txid-input {
+        font-size: 12px;
+      }
+      .pzc-txid-btn {
+        width: 100%;
+        text-align: center;
+        padding: 10px;
+      }
+      .pzc-amount-copy-btn {
+        padding: 6px 14px;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .pzc-card {
+        padding: 16px 12px;
+      }
+      .pzc-amount-value {
+        font-size: 20px;
+      }
+      .pzc-address-text {
+        font-size: 10px;
+      }
+    }
+  </style>
+
+  <div class="pzc-wrap">
+    <div class="pzc-card">
+      <h2>{{ text_payment_title }}</h2>
+      <p class="pzc-subtitle">{{ text_payment_info }}</p>
+
+      <div style="text-align:center;">
+        <span class="pzc-order-badge">{{ text_order_id }}{{ order_id }}</span>
+      </div>
+
+      {# Notice from API (static wallet instructions) #}
+      {% if notice %}
+      <div class="pzc-notice-box">
+        {{ notice }}
+      </div>
+      {% endif %}
+
+      {# Amount #}
+      <div class="pzc-amount-box">
+        <div class="pzc-amount-label">{{ text_send_exactly }}</div>
+        <div class="pzc-amount-value">
+          <span id="pzc-amount">{{ amount }}</span><span class="pzc-amount-unit">{{ token_label }}</span>
+        </div>
+        <div class="pzc-amount-copy-row">
+          <span class="pzc-network-badge">{{ network_label }}</span>
+          <button type="button" class="pzc-amount-copy-btn" id="pzc-amount-copy-btn" onclick="pzcCopyAmount()">{{ text_copy_amount }}</button>
+        </div>
+      </div>
+
+      {# Address #}
+      <div class="pzc-address-box">
+        <div class="pzc-address-label">{{ text_to_address }}</div>
+        <div class="pzc-address-row">
+          <div class="pzc-address-text" id="pzc-address">{{ address }}</div>
+          <button type="button" class="pzc-copy-btn" id="pzc-copy-btn" onclick="pzcCopyAddress()">{{ text_copy }}</button>
+        </div>
+      </div>
+
+      {# QR Code #}
+      {% if qr_code %}
+      <div class="pzc-qr-section">
+        <div class="pzc-qr-label">{{ text_or_scan_qr }}</div>
+        <div class="pzc-qr-img">
+          <img src="{{ qr_code }}" alt="Payment QR Code" />
+        </div>
+      </div>
+      {% endif %}
+
+      {# Countdown Timer #}
+      <div class="pzc-timer-box" id="pzc-timer-box">
+        <span class="pzc-timer-label">{{ text_time_remaining }}</span>
+        <span class="pzc-timer-value" id="pzc-timer">--:--</span>
+      </div>
+
+      {# Status indicator #}
+      <div class="pzc-status-box" id="pzc-status-box">
+        <span class="pzc-status-dot" id="pzc-status-dot"></span>
+        <span class="pzc-status-text" id="pzc-status-text">{{ text_status_checking }}</span>
+        <div class="pzc-partial-guidance" id="pzc-partial-guidance">{{ text_partial_guidance }}</div>
+        <div class="pzc-connection-issue" id="pzc-connection-issue">{{ text_connection_issue }}</div>
+      </div>
+
+      {# Transaction hash submission form (static wallet) #}
+      {% if requires_txid %}
+      <div class="pzc-txid-box" id="pzc-txid-box">
+        <div class="pzc-txid-label">{{ text_txid_label }}</div>
+        <div class="pzc-txid-row">
+          <input type="text" id="pzc-txid-input" class="pzc-txid-input" placeholder="{{ text_txid_placeholder }}" />
+          <button type="button" class="pzc-txid-btn" id="pzc-txid-btn" onclick="pzcSubmitTxId()">{{ text_txid_submit }}</button>
+        </div>
+        <div class="pzc-txid-msg" id="pzc-txid-msg"></div>
+      </div>
+      {% endif %}
+
+      {# Warnings #}
+      <div class="pzc-warnings">
+        <h4>{{ text_important }}</h4>
+        <ul>
+          <li>{{ text_warning_exact }}</li>
+          <li>{{ text_warning_network }}</li>
+          <li>{{ text_warning_address }}</li>
+        </ul>
+      </div>
+
+      {# Explorer link #}
+      <div class="pzc-explorer-link">
+        <a href="{{ explorer_url }}" target="_blank" rel="noopener noreferrer">{{ text_explorer_link }} &rarr;</a>
+      </div>
+    </div>
+
+  </div>
+
+  {{ content_bottom }}
+</div>
+
+<script type="text/javascript"><!--
+(function() {
+    var secondsRemaining = {{ seconds_remaining }};
+    var statusUrl = {{ status_url|json_encode|raw }};
+    var successUrl = {{ success_url|json_encode|raw }};
+    var pollInterval = null;
+    var timerInterval = null;
+    var isCompleted = false;
+    var consecutivePollFailures = 0;
+    var timerExpired = false;
+
+    // Countdown timer
+    function updateTimer() {
+        if (secondsRemaining <= 0) {
+            timerExpired = true;
+            document.getElementById('pzc-timer').textContent = '00:00';
+            document.getElementById('pzc-timer-box').classList.add('expired');
+            document.getElementById('pzc-status-dot').classList.add('expired');
+            document.getElementById('pzc-status-text').textContent = {{ text_payment_expired|json_encode|raw }};
+            clearInterval(timerInterval);
+            clearInterval(pollInterval);
+
+            // Disable txid form when timer expires
+            var txidInput = document.getElementById('pzc-txid-input');
+            var txidBtn = document.getElementById('pzc-txid-btn');
+            if (txidInput) { txidInput.disabled = true; }
+            if (txidBtn) { txidBtn.disabled = true; }
+            return;
+        }
+
+        secondsRemaining--;
+        var minutes = Math.floor(secondsRemaining / 60);
+        var seconds = secondsRemaining % 60;
+        document.getElementById('pzc-timer').textContent =
+            String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
+    }
+
+    // Status polling
+    function checkStatus() {
+        if (isCompleted) return;
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', statusUrl, true);
+        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+        xhr.timeout = 15000;
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState !== 4) return;
+
+            if (xhr.status !== 200) {
+                consecutivePollFailures++;
+                if (consecutivePollFailures >= 3) {
+                    var connEl = document.getElementById('pzc-connection-issue');
+                    if (connEl) { connEl.style.display = 'block'; }
+                }
+                return;
+            }
+
+            try {
+                var data = JSON.parse(xhr.responseText);
+
+                // Reset failure counter on success
+                consecutivePollFailures = 0;
+                var connEl = document.getElementById('pzc-connection-issue');
+                if (connEl) { connEl.style.display = 'none'; }
+
+                if (data.status === 'paid' || data.status === 'overpaid') {
+                    isCompleted = true;
+                    clearInterval(pollInterval);
+                    clearInterval(timerInterval);
+
+                    document.getElementById('pzc-status-dot').classList.add('confirmed');
+                    document.getElementById('pzc-status-text').textContent = {{ text_payment_confirmed|json_encode|raw }};
+
+                    // Hide partial guidance if shown
+                    var partialEl = document.getElementById('pzc-partial-guidance');
+                    if (partialEl) { partialEl.style.display = 'none'; }
+
+                    // Redirect after a short delay
+                    setTimeout(function() {
+                        window.location.href = data.redirect || successUrl;
+                    }, 2000);
+                } else if (data.status === 'partial') {
+                    document.getElementById('pzc-status-text').textContent = {{ text_payment_detected|json_encode|raw }};
+                    // Show partial payment guidance
+                    var partialEl = document.getElementById('pzc-partial-guidance');
+                    if (partialEl) { partialEl.style.display = 'block'; }
+                } else if (data.status === 'expired') {
+                    isCompleted = true;
+                    clearInterval(pollInterval);
+                    clearInterval(timerInterval);
+
+                    document.getElementById('pzc-timer').textContent = '00:00';
+                    document.getElementById('pzc-timer-box').classList.add('expired');
+                    document.getElementById('pzc-status-dot').classList.add('expired');
+                    document.getElementById('pzc-status-text').textContent = {{ text_payment_expired|json_encode|raw }};
+
+                    // Disable txid form on expiry
+                    var txidInput = document.getElementById('pzc-txid-input');
+                    var txidBtn = document.getElementById('pzc-txid-btn');
+                    if (txidInput) { txidInput.disabled = true; }
+                    if (txidBtn) { txidBtn.disabled = true; }
+                }
+            } catch (e) {
+                consecutivePollFailures++;
+                if (consecutivePollFailures >= 3) {
+                    var connEl = document.getElementById('pzc-connection-issue');
+                    if (connEl) { connEl.style.display = 'block'; }
+                }
+            }
+        };
+        xhr.ontimeout = function() {
+            consecutivePollFailures++;
+            if (consecutivePollFailures >= 3) {
+                var connEl = document.getElementById('pzc-connection-issue');
+                if (connEl) { connEl.style.display = 'block'; }
+            }
+        };
+        xhr.send();
+    }
+
+    // Start timer
+    updateTimer();
+    timerInterval = setInterval(updateTimer, 1000);
+
+    // Start polling every 10 seconds
+    pollInterval = setInterval(checkStatus, 10000);
+
+    // Also check immediately after 3 seconds
+    setTimeout(checkStatus, 3000);
+})();
+
+// Helper: copy text to clipboard with fallback
+function pzcCopyToClipboard(text, btn, labelCopied, labelDefault) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function() {
+            btn.textContent = labelCopied;
+            btn.classList.add('copied');
+            setTimeout(function() {
+                btn.textContent = labelDefault;
+                btn.classList.remove('copied');
+            }, 3000);
+        });
+    } else {
+        var textArea = document.createElement('textarea');
+        textArea.value = text;
+        textArea.style.position = 'fixed';
+        textArea.style.left = '-9999px';
+        document.body.appendChild(textArea);
+        textArea.select();
+        try {
+            document.execCommand('copy');
+            btn.textContent = labelCopied;
+            btn.classList.add('copied');
+            setTimeout(function() {
+                btn.textContent = labelDefault;
+                btn.classList.remove('copied');
+            }, 3000);
+        } catch (e) {}
+        document.body.removeChild(textArea);
+    }
+}
+
+// Copy address to clipboard
+function pzcCopyAddress() {
+    var address = document.getElementById('pzc-address').textContent.trim();
+    var btn = document.getElementById('pzc-copy-btn');
+    pzcCopyToClipboard(address, btn, {{ text_copied|json_encode|raw }}, {{ text_copy|json_encode|raw }});
+}
+
+// Copy amount to clipboard
+function pzcCopyAmount() {
+    var amount = document.getElementById('pzc-amount').textContent.trim();
+    var btn = document.getElementById('pzc-amount-copy-btn');
+    pzcCopyToClipboard(amount, btn, {{ text_copied_amount|json_encode|raw }}, {{ text_copy_amount|json_encode|raw }});
+}
+
+{% if requires_txid %}
+// Validate tx hash is hexadecimal (with optional 0x prefix)
+function pzcIsValidTxHash(hash) {
+    return /^(0x)?[0-9a-fA-F]{10,128}$/.test(hash);
+}
+
+// Submit transaction hash
+function pzcSubmitTxId() {
+    var input = document.getElementById('pzc-txid-input');
+    var btn = document.getElementById('pzc-txid-btn');
+    var msg = document.getElementById('pzc-txid-msg');
+    var txHash = input.value.trim();
+
+    if (!txHash) {
+        msg.textContent = 'Please enter a transaction hash.';
+        msg.className = 'pzc-txid-msg error';
+        return;
+    }
+
+    // Client-side hex format validation
+    if (!pzcIsValidTxHash(txHash)) {
+        msg.textContent = {{ text_txid_invalid_hex|json_encode|raw }};
+        msg.className = 'pzc-txid-msg error';
+        return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = {{ text_txid_submitting|json_encode|raw }};
+    msg.className = 'pzc-txid-msg';
+
+    var confirmUrl = {{ confirmtx_url|json_encode|raw }};
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', confirmUrl, true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState !== 4) return;
+
+        try {
+            var data = JSON.parse(xhr.responseText);
+            if (data.success) {
+                msg.textContent = data.message || {{ text_txid_submitted|json_encode|raw }};
+                msg.className = 'pzc-txid-msg success';
+                input.disabled = true;
+                btn.style.display = 'none';
+            } else {
+                msg.textContent = data.error || 'Submission failed. Please try again.';
+                msg.className = 'pzc-txid-msg error';
+                btn.disabled = false;
+                btn.textContent = {{ text_txid_submit|json_encode|raw }};
+            }
+        } catch (e) {
+            msg.textContent = 'Submission failed. Please try again.';
+            msg.className = 'pzc-txid-msg error';
+            btn.disabled = false;
+            btn.textContent = {{ text_txid_submit|json_encode|raw }};
+        }
+    };
+    xhr.send('order_id=' + {{ order_id|json_encode|raw }} + '&tx_hash=' + encodeURIComponent(txHash));
+}
+{% endif %}
+//--></script>
+{{ footer }}

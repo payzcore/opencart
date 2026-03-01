@@ -1,0 +1,349 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="pull-right">
+        <button type="submit" form="form-payzcore" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa fa-save"></i></button>
+        <a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i class="fa fa-reply"></i></a>
+      </div>
+      <h1>{{ heading_title }}</h1>
+      <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+        <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="container-fluid">
+    {% if error_warning %}
+    <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %}
+    {% if success %}
+    <div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> {{ success }}
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %}
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-pencil"></i> {{ text_edit }}</h3>
+      </div>
+      <div class="panel-body">
+        {# Info box #}
+        <div class="alert alert-info">
+          <i class="fa fa-info-circle"></i> {{ info_description }}
+        </div>
+        <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-payzcore" class="form-horizontal">
+          <ul class="nav nav-tabs">
+            <li class="active"><a href="#tab-general" data-toggle="tab">{{ tab_general }}</a></li>
+            <li><a href="#tab-order-status" data-toggle="tab">{{ tab_order_status }}</a></li>
+            <li><a href="#tab-texts" data-toggle="tab">{{ tab_texts }}</a></li>
+          </ul>
+          <div class="tab-content">
+            {# General Tab #}
+            <div class="tab-pane active" id="tab-general">
+              {# Status #}
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-status">{{ entry_status }}</label>
+                <div class="col-sm-10">
+                  <select name="payment_payzcore_status" id="input-status" class="form-control">
+                    <option value="1" {% if payment_payzcore_status == '1' %}selected="selected"{% endif %}>{{ text_enabled }}</option>
+                    <option value="0" {% if payment_payzcore_status != '1' %}selected="selected"{% endif %}>{{ text_disabled }}</option>
+                  </select>
+                </div>
+              </div>
+              {# API Key #}
+              <div class="form-group required">
+                <label class="col-sm-2 control-label" for="input-api-key">
+                  <span data-toggle="tooltip" title="{{ help_api_key }}">{{ entry_api_key }}</span>
+                </label>
+                <div class="col-sm-10">
+                  <input type="text" name="payment_payzcore_api_key" value="{{ payment_payzcore_api_key }}" placeholder="{{ placeholder_api_key }}" id="input-api-key" class="form-control" autocomplete="off" />
+                  {% if error_api_key %}
+                  <div class="text-danger">{{ error_api_key }}</div>
+                  {% endif %}
+                </div>
+              </div>
+              {# Webhook Secret #}
+              <div class="form-group required">
+                <label class="col-sm-2 control-label" for="input-webhook-secret">
+                  <span data-toggle="tooltip" title="{{ help_webhook_secret }}">{{ entry_webhook_secret }}</span>
+                </label>
+                <div class="col-sm-10">
+                  <input type="password" name="payment_payzcore_webhook_secret" value="{{ payment_payzcore_webhook_secret }}" placeholder="{{ placeholder_webhook_secret }}" id="input-webhook-secret" class="form-control" autocomplete="new-password" />
+                  {% if error_webhook_secret %}
+                  <div class="text-danger">{{ error_webhook_secret }}</div>
+                  {% endif %}
+                </div>
+              </div>
+              {# API URL #}
+              <div class="form-group required">
+                <label class="col-sm-2 control-label" for="input-api-url">
+                  <span data-toggle="tooltip" title="{{ help_api_url }}">{{ entry_api_url }}</span>
+                </label>
+                <div class="col-sm-10">
+                  <input type="text" name="payment_payzcore_api_url" value="{{ payment_payzcore_api_url }}" placeholder="{{ placeholder_api_url }}" id="input-api-url" class="form-control" />
+                  {% if error_api_url %}
+                  <div class="text-danger">{{ error_api_url }}</div>
+                  {% endif %}
+                </div>
+              </div>
+              {# Connection Status #}
+              <div class="form-group">
+                <label class="col-sm-2 control-label">{{ text_connection_status }}</label>
+                <div class="col-sm-10">
+                  {% if cached_config %}
+                    <div class="alert alert-success" style="margin-bottom:8px;">
+                      <i class="fa fa-check-circle"></i> <strong>{{ text_connected }}</strong>
+                      {% if cached_at %} &mdash; {{ text_last_sync }}: {{ cached_at }}{% endif %}
+                    </div>
+                    {% if cached_networks|length > 0 %}
+                    <p style="margin-bottom:4px;"><strong>{{ text_available_networks }}:</strong>
+                      {% for net in cached_networks %}
+                        <span class="label label-info" style="margin-right:4px;">{{ net.network }} &middot; {{ net.tokens|join(', ') }}</span>
+                      {% endfor %}
+                    </p>
+                    {% endif %}
+                    <p class="help-block">{{ text_networks_help }}</p>
+                  {% else %}
+                    <div class="alert alert-warning" style="margin-bottom:8px;">
+                      <i class="fa fa-exclamation-triangle"></i> <strong>{{ text_not_synced }}</strong> &mdash; {{ text_save_to_sync }}
+                    </div>
+                    <p class="help-block">{{ text_networks_help }}</p>
+                  {% endif %}
+                </div>
+              </div>
+              {# Static Wallet Address #}
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-address">
+                  <span data-toggle="tooltip" title="{{ help_address }}">{{ entry_address }}</span>
+                </label>
+                <div class="col-sm-10">
+                  <input type="text" name="payment_payzcore_address" value="{{ payment_payzcore_address }}" placeholder="{{ placeholder_address }}" id="input-address" class="form-control" />
+                </div>
+              </div>
+              {# Expiry #}
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-expires-in">
+                  <span data-toggle="tooltip" title="{{ help_expires_in }}">{{ entry_expires_in }}</span>
+                </label>
+                <div class="col-sm-10">
+                  <input type="number" name="payment_payzcore_expires_in" value="{{ payment_payzcore_expires_in }}" id="input-expires-in" class="form-control" min="600" step="60" />
+                  {% if error_expires_in %}
+                  <div class="text-danger">{{ error_expires_in }}</div>
+                  {% endif %}
+                </div>
+              </div>
+              {# Geo Zone #}
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-geo-zone">
+                  <span data-toggle="tooltip" title="{{ help_geo_zone }}">{{ entry_geo_zone }}</span>
+                </label>
+                <div class="col-sm-10">
+                  <select name="payment_payzcore_geo_zone_id" id="input-geo-zone" class="form-control">
+                    <option value="0">{{ text_all_zones }}</option>
+                    {% for geo_zone in geo_zones %}
+                    <option value="{{ geo_zone.geo_zone_id }}" {% if payment_payzcore_geo_zone_id == geo_zone.geo_zone_id %}selected="selected"{% endif %}>{{ geo_zone.name }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+              {# Sort Order #}
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-sort-order">{{ entry_sort_order }}</label>
+                <div class="col-sm-10">
+                  <input type="text" name="payment_payzcore_sort_order" value="{{ payment_payzcore_sort_order }}" id="input-sort-order" class="form-control" />
+                </div>
+              </div>
+              {# Debug #}
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-debug">
+                  <span data-toggle="tooltip" title="{{ help_debug }}">{{ entry_debug }}</span>
+                </label>
+                <div class="col-sm-10">
+                  <select name="payment_payzcore_debug" id="input-debug" class="form-control">
+                    <option value="0" {% if payment_payzcore_debug != '1' %}selected="selected"{% endif %}>{{ text_no }}</option>
+                    <option value="1" {% if payment_payzcore_debug == '1' %}selected="selected"{% endif %}>{{ text_yes }}</option>
+                  </select>
+                </div>
+              </div>
+              {# Webhook URL info #}
+              <div class="form-group">
+                <label class="col-sm-2 control-label">{{ info_webhook_url }}</label>
+                <div class="col-sm-10">
+                  <div class="input-group">
+                    <input type="text" value="{{ webhook_url }}" class="form-control" readonly="readonly" id="webhook-url" />
+                    <span class="input-group-btn">
+                      <button type="button" class="btn btn-default" onclick="copyWebhookUrl()"><i class="fa fa-clipboard"></i></button>
+                    </span>
+                  </div>
+                  <p class="help-block">{{ info_webhook_help }}</p>
+                </div>
+              </div>
+            </div>
+            {# Order Status Tab #}
+            <div class="tab-pane" id="tab-order-status">
+              {# Pending Status #}
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-order-status">
+                  <span data-toggle="tooltip" title="{{ help_order_status }}">{{ entry_order_status }}</span>
+                </label>
+                <div class="col-sm-10">
+                  <select name="payment_payzcore_order_status_id" id="input-order-status" class="form-control">
+                    {% for order_status in order_statuses %}
+                    <option value="{{ order_status.order_status_id }}" {% if payment_payzcore_order_status_id == order_status.order_status_id %}selected="selected"{% endif %}>{{ order_status.name }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+              {# Completed Status #}
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-completed-status">
+                  <span data-toggle="tooltip" title="{{ help_completed_status }}">{{ entry_completed_status }}</span>
+                </label>
+                <div class="col-sm-10">
+                  <select name="payment_payzcore_completed_status_id" id="input-completed-status" class="form-control">
+                    {% for order_status in order_statuses %}
+                    <option value="{{ order_status.order_status_id }}" {% if payment_payzcore_completed_status_id == order_status.order_status_id %}selected="selected"{% endif %}>{{ order_status.name }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+              {# Expired Status #}
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-expired-status">
+                  <span data-toggle="tooltip" title="{{ help_expired_status }}">{{ entry_expired_status }}</span>
+                </label>
+                <div class="col-sm-10">
+                  <select name="payment_payzcore_expired_status_id" id="input-expired-status" class="form-control">
+                    {% for order_status in order_statuses %}
+                    <option value="{{ order_status.order_status_id }}" {% if payment_payzcore_expired_status_id == order_status.order_status_id %}selected="selected"{% endif %}>{{ order_status.name }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+            </div>
+            {# Payment Page Texts Tab #}
+            <div class="tab-pane" id="tab-texts">
+              <div class="alert alert-info">
+                <i class="fa fa-info-circle"></i> {{ help_texts }}
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-text-payment-title">{{ entry_text_payment_title }}</label>
+                <div class="col-sm-10">
+                  <input type="text" name="payment_payzcore_text_payment_title" value="{{ payment_payzcore_text_payment_title }}" id="input-text-payment-title" class="form-control" placeholder="Complete Your Payment" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-text-payment-info">{{ entry_text_payment_info }}</label>
+                <div class="col-sm-10">
+                  <textarea name="payment_payzcore_text_payment_info" id="input-text-payment-info" class="form-control" rows="3" placeholder="Send the exact amount to the address below. Your order will be confirmed automatically once the transaction is detected on the blockchain.">{{ payment_payzcore_text_payment_info }}</textarea>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-text-send-exactly">{{ entry_text_send_exactly }}</label>
+                <div class="col-sm-10">
+                  <input type="text" name="payment_payzcore_text_send_exactly" value="{{ payment_payzcore_text_send_exactly }}" id="input-text-send-exactly" class="form-control" placeholder="Send exactly" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-text-to-address">{{ entry_text_to_address }}</label>
+                <div class="col-sm-10">
+                  <input type="text" name="payment_payzcore_text_to_address" value="{{ payment_payzcore_text_to_address }}" id="input-text-to-address" class="form-control" placeholder="To this address" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-text-copy">{{ entry_text_copy }}</label>
+                <div class="col-sm-10">
+                  <input type="text" name="payment_payzcore_text_copy" value="{{ payment_payzcore_text_copy }}" id="input-text-copy" class="form-control" placeholder="Copy" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-text-copied">{{ entry_text_copied }}</label>
+                <div class="col-sm-10">
+                  <input type="text" name="payment_payzcore_text_copied" value="{{ payment_payzcore_text_copied }}" id="input-text-copied" class="form-control" placeholder="Copied!" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-text-scan-qr">{{ entry_text_scan_qr }}</label>
+                <div class="col-sm-10">
+                  <input type="text" name="payment_payzcore_text_scan_qr" value="{{ payment_payzcore_text_scan_qr }}" id="input-text-scan-qr" class="form-control" placeholder="Or scan QR code" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-text-time-remaining">{{ entry_text_time_remaining }}</label>
+                <div class="col-sm-10">
+                  <input type="text" name="payment_payzcore_text_time_remaining" value="{{ payment_payzcore_text_time_remaining }}" id="input-text-time-remaining" class="form-control" placeholder="Time remaining" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-text-status-checking">{{ entry_text_status_checking }}</label>
+                <div class="col-sm-10">
+                  <input type="text" name="payment_payzcore_text_status_checking" value="{{ payment_payzcore_text_status_checking }}" id="input-text-status-checking" class="form-control" placeholder="Checking blockchain for your transaction" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-text-status-confirmed">{{ entry_text_status_confirmed }}</label>
+                <div class="col-sm-10">
+                  <input type="text" name="payment_payzcore_text_status_confirmed" value="{{ payment_payzcore_text_status_confirmed }}" id="input-text-status-confirmed" class="form-control" placeholder="Payment confirmed! Redirecting..." />
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-text-status-expired">{{ entry_text_status_expired }}</label>
+                <div class="col-sm-10">
+                  <input type="text" name="payment_payzcore_text_status_expired" value="{{ payment_payzcore_text_status_expired }}" id="input-text-status-expired" class="form-control" placeholder="Payment request has expired." />
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-text-status-detected">{{ entry_text_status_detected }}</label>
+                <div class="col-sm-10">
+                  <input type="text" name="payment_payzcore_text_status_detected" value="{{ payment_payzcore_text_status_detected }}" id="input-text-status-detected" class="form-control" placeholder="Transaction detected! Confirming..." />
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-text-important">{{ entry_text_important }}</label>
+                <div class="col-sm-10">
+                  <input type="text" name="payment_payzcore_text_important" value="{{ payment_payzcore_text_important }}" id="input-text-important" class="form-control" placeholder="Important" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-text-warning-exact">{{ entry_text_warning_exact }}</label>
+                <div class="col-sm-10">
+                  <textarea name="payment_payzcore_text_warning_exact" id="input-text-warning-exact" class="form-control" rows="2" placeholder="Send the exact amount shown. Sending a different amount may delay processing.">{{ payment_payzcore_text_warning_exact }}</textarea>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-text-warning-network">{{ entry_text_warning_network }}</label>
+                <div class="col-sm-10">
+                  <textarea name="payment_payzcore_text_warning_network" id="input-text-warning-network" class="form-control" rows="2" placeholder="Make sure you are sending on the correct network. Sending on the wrong network may result in lost funds.">{{ payment_payzcore_text_warning_network }}</textarea>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-text-warning-address">{{ entry_text_warning_address }}</label>
+                <div class="col-sm-10">
+                  <textarea name="payment_payzcore_text_warning_address" id="input-text-warning-address" class="form-control" rows="2" placeholder="Double-check the address before sending. Blockchain transactions cannot be reversed.">{{ payment_payzcore_text_warning_address }}</textarea>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-text-explorer-link">{{ entry_text_explorer_link }}</label>
+                <div class="col-sm-10">
+                  <input type="text" name="payment_payzcore_text_explorer_link" value="{{ payment_payzcore_text_explorer_link }}" id="input-text-explorer-link" class="form-control" placeholder="View address on blockchain explorer" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+function copyWebhookUrl() {
+  var el = document.getElementById('webhook-url');
+  el.select();
+  el.setSelectionRange(0, 99999);
+  document.execCommand('copy');
+}
+</script>
+{{ footer }}
