@@ -1,5 +1,7 @@
 # PayzCore for OpenCart 3.x
 
+[![OpenCart Marketplace](https://img.shields.io/badge/OpenCart-Marketplace-blue)](https://www.opencart.com/index.php?route=marketplace/extension/info&extension_id=48214) [![Docs](https://img.shields.io/badge/Docs-docs.payzcore.com-cyan)](https://docs.payzcore.com/integrations/opencart)
+
 Accept stablecoin payments (USDT, USDC) in your OpenCart store via PayzCore blockchain transaction monitoring.
 
 PayzCore is a **non-custodial** monitoring service. It watches blockchain addresses for incoming stablecoin transfers on multiple networks and sends webhook notifications when transactions are detected. PayzCore does not hold, transmit, or custody any funds.
