@@ -6,7 +6,7 @@
  * for the PayzCore extension on the storefront.
  *
  * @package    PayzCore OpenCart Extension
- * @version    1.0.0
+ * @version    1.0.1
  */
 class ModelExtensionPaymentPayzcore extends Model {
     /**
@@ -213,8 +213,11 @@ class ModelExtensionPaymentPayzcore extends Model {
      * @return array|false Payment record or false if not found.
      */
     public function getPaymentByExternalOrderId($external_order_id) {
-        // Extract order_id from "oc-123" format
-        $order_id = (int)str_replace('oc-', '', $external_order_id);
+        // Extract order_id from "oc-123" or "oc-123-r0a1b2c3d" (retry attempt) format
+        if (!preg_match('/^oc-(\d+)(?:-r[0-9a-f]{8})?$/', (string)$external_order_id, $m)) {
+            return false;
+        }
+        $order_id = (int)$m[1];
 
         if ($order_id <= 0) {
             return false;

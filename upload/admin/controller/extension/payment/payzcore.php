@@ -7,7 +7,7 @@
  * blockchain network, order status mappings, and other settings.
  *
  * @package    PayzCore OpenCart Extension
- * @version    1.0.0
+ * @version    1.0.1
  */
 class ControllerExtensionPaymentPayzcore extends Controller {
     /**
@@ -259,7 +259,7 @@ class ControllerExtensionPaymentPayzcore extends Controller {
             CURLOPT_HTTPHEADER     => array(
                 'x-api-key: ' . $api_key,
                 'Accept: application/json',
-                'User-Agent: payzcore-opencart/1.0.0',
+                'User-Agent: payzcore-opencart/1.0.1',
             ),
             CURLOPT_SSL_VERIFYPEER => true,
             CURLOPT_SSL_VERIFYHOST => 2,

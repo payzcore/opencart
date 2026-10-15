@@ -9,7 +9,7 @@
  * It does not hold, transmit, or custody any funds.
  *
  * @package    PayzCore OpenCart Extension
- * @version    1.0.0
+ * @version    1.0.1
  */
 class ControllerExtensionPaymentPayzcore extends Controller {
     /**
@@ -164,8 +164,14 @@ class ControllerExtensionPaymentPayzcore extends Controller {
             // Build external reference from customer email
             $external_ref = $order_info['email'];
 
-            // Build external order ID
+            // Build external order ID. PayzCore returns the existing payment (any
+            // status, expired included) for a repeated external_order_id, so a new
+            // attempt after an expired/cancelled payment needs a new id:
+            // "oc-{order_id}-r{first 8 hex of sha256(previous payment id)}".
             $external_order_id = 'oc-' . $order_id;
+            if ($existing && !empty($existing['payment_id']) && in_array($existing['status'], array('expired', 'cancelled'), true)) {
+                $external_order_id .= '-r' . substr(hash('sha256', (string)$existing['payment_id']), 0, 8);
+            }
 
             $params = array(
                 'amount'            => round($amount, 2),
@@ -176,7 +182,7 @@ class ControllerExtensionPaymentPayzcore extends Controller {
                 'expires_in'        => $expires_in,
                 'metadata'          => array(
                     'source'     => 'opencart',
-                    'version'    => '1.0.0',
+                    'version'    => '1.0.1',
                     'store'      => $this->config->get('config_name'),
                     'order_id'   => $order_id,
                     'customer'   => $order_info['firstname'] . ' ' . $order_info['lastname'],
@@ -316,15 +322,16 @@ class ControllerExtensionPaymentPayzcore extends Controller {
         $this->load->model('extension/payment/payzcore');
         $this->load->model('checkout/order');
 
-        // Find the order by external_order_id or payment_id
+        // Find the payment record: by payment_id first (exact, also correct when an
+        // order has several attempts), then by external_order_id ("oc-{id}[-r…]")
         $payment_record = null;
 
-        if (isset($payload['external_order_id'])) {
-            $payment_record = $this->model_extension_payment_payzcore->getPaymentByExternalOrderId($payload['external_order_id']);
+        if (isset($payload['payment_id'])) {
+            $payment_record = $this->model_extension_payment_payzcore->getPaymentByPaymentId($payload['payment_id']);
         }
 
-        if (!$payment_record && isset($payload['payment_id'])) {
-            $payment_record = $this->model_extension_payment_payzcore->getPaymentByPaymentId($payload['payment_id']);
+        if (!$payment_record && isset($payload['external_order_id'])) {
+            $payment_record = $this->model_extension_payment_payzcore->getPaymentByExternalOrderId($payload['external_order_id']);
         }
 
         if (!$payment_record) {

@@ -2,7 +2,7 @@
 <modification>
     <name>PayzCore - Stablecoin Monitoring for OpenCart</name>
     <code>payzcore</code>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <author>PayzCore</author>
     <link>https://payzcore.com</link>
     <description>Accept stablecoin payments (USDT, USDC) on multiple networks (TRC20, BEP20, ERC20, Polygon, Arbitrum) via PayzCore blockchain transaction monitoring. Non-custodial - watches blockchain addresses and sends webhook notifications when transactions are detected.</description>

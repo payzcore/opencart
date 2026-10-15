@@ -5,7 +5,7 @@
  * Handles database table creation/removal for the PayzCore extension.
  *
  * @package    PayzCore OpenCart Extension
- * @version    1.0.0
+ * @version    1.0.1
  */
 class ModelExtensionPaymentPayzcore extends Model {
     /**

@@ -8,7 +8,7 @@
  * and sends webhook notifications. Does not hold or transmit funds.
  *
  * @package    PayzCore
- * @version    1.0.0
+ * @version    1.0.1
  * @license    MIT
  * @link       https://payzcore.com
  */
@@ -31,7 +31,7 @@ class Payzcore {
     /**
      * @var string User-Agent header
      */
-    private $user_agent = 'PayzCore-OpenCart/1.0.0';
+    private $user_agent = 'PayzCore-OpenCart/1.0.1';
 
     /**
      * Constructor.
